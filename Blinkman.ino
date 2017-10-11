@@ -4,6 +4,11 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 
+//const char *ssid = "";
+//const char *password = "";
+const char* www_username = "admin";
+const char* www_password = "esp8266";
+
 CRGB leds[NUM_LEDS];
 
 void fade() {
@@ -40,6 +45,8 @@ void resetAndNull() {
 
 void led()
 {
+  if (!server.authenticate(www_username, www_password))
+    return server.requestAuthentication();
   String state = server.arg("state");
   if (state == "on" && (active
                         != true)) {
@@ -57,10 +64,9 @@ void buttonPress()
 }
 
 void setup() {
-  LEDS.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(buttonPin, INPUT_PULLUP);
-
+  LEDS.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
   FastLED.clear(true);
   for (int i = 0; i < NUM_LEDS; i++) {
     leds[i] = CRGB::Black;
