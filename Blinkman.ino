@@ -16,19 +16,22 @@ void fade() {
     for (int i = -1; i < ledcounter; i++) {
       leds[i] = CRGB(0, g, 0);
     }
-    if ((g++ % 32) == 0)
+    if ((g % 32) == 0)
       ledcounter++;
+    g++;
   }
   if (g == 255 && (r < 256)) {
     for (int i = 0; i < NUM_LEDS; i++) {
-      leds[i] = CRGB(r++, g, 0);
+      leds[i] = CRGB(r, g, 0);
     }
+    r++;
     almostfinished = true;
   }
   if (r == 256 && almostfinished && !finished) {
     for (int i = 0; i < NUM_LEDS; i++) {
-      leds[i] = CRGB(r - 1, g--, 0);
+      leds[i] = CRGB(r - 1, g, 0);
     }
+    g--;
     if (g < 0) {
       finished = true;
     }
@@ -97,6 +100,6 @@ void loop() {
   server.handleClient();
   if (active && sem) {
     sem = false;
-    flipper.attach_ms(50, fade);
+    flipper.attach_ms(20, fade);
   }
 }
